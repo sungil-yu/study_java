@@ -21,18 +21,14 @@ public class UserService {
 
         for(User user: users){
             if(canUpgradeLevel(user)){
-                upgradeLevel(user);
+                user.upgradeLevel();
+                userDao.update(user);
             }
         }
 
+    }
 
-    }
-        //Level의 순서를 userService가 알아야하는 이유는 없다.
-    private void upgradeLevel(User user) {
-        if (user.getLevel() == Level.BASIC) user.setLevel(Level.SILVER);
-        else if (user.getLevel() == Level.SILVER) user.setLevel(Level.GOLD);
-        userDao.update(user);
-    }
+
 
     //주어진 user가 업그레이드가 가능한지 조건만 비교
     private boolean canUpgradeLevel(User user) {

@@ -1,17 +1,27 @@
 package com.test.test.domain;
 
 public enum Level {
+        //순서 고려
+    GOLD(3,null),
+    SILVER(2,GOLD),
+    BASIC(1,SILVER);
 
-    BASIC(1), SILVER(2), GOLD(3);
+
 
     private final int value;
+    private final Level next;
 
-    Level(int value){
+    Level(int value, Level next) {
         this.value = value;
+        this.next = next;
     }
 
     public int intValue(){
         return value;
+    }
+
+    public Level nextLevel() {
+        return this.next;
     }
 
     public static Level valueOf(int value){
