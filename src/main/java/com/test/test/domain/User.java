@@ -16,7 +16,7 @@ public class User {
         Level level;
         int login;
         int recommend;
-
+        private String mail;
 
         //Level의 순서를 userService가 알아야하는 이유는 없다.
         //또한 User에게 업그레이드 하라고 요청하는 편도 괜찮다.
