@@ -1,9 +1,7 @@
 package com.test.test.domain;
 
 
-import com.test.test.service.EventUserUpgradePolicy;
-import com.test.test.service.UserLevelUpgradePolicy;
-import com.test.test.service.UserServiceImpl;
+import com.test.test.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.SimpleDriverDataSource;
@@ -40,13 +38,21 @@ public class Configuration {
     }
 
     @Bean
-    public UserServiceImpl userService() {
+    public UserServiceImpl userServiceImpl() {
         UserServiceImpl userServiceImpl = new UserServiceImpl();
         userServiceImpl.setUserDao(userDao());
-        userServiceImpl.setTransactionManager(transactionManager());
         userServiceImpl.setMailSender(mailSender());
 
         return userServiceImpl;
+    }
+
+    @Bean
+    public UserService userServiceTx(){
+        UserServiceTx userServiceTx = new UserServiceTx();
+        userServiceTx.setUserService(userServiceImpl());
+        userServiceTx.setTr(transactionManager());
+
+        return userServiceTx;
     }
 
     @Bean

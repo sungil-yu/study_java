@@ -1,8 +1,6 @@
 package com.test.test.service;
 
-import com.test.test.domain.Configuration;
-import com.test.test.domain.Level;
-import com.test.test.domain.User;
+import com.test.test.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,8 +29,49 @@ public class UserServiceImplTest {
      @Autowired
      UserServiceImpl userServiceImpl;
 
+    @Autowired
+    UserService userservice;
 
     List<User> users;
+
+    static class MockUserDao implements UserDaoInterface {
+
+        private List<User> users;
+        private List<User> updated = new ArrayList<>();
+
+        public MockUserDao(List<User> users) {
+            this.users = users;
+        }
+
+        @Override
+        public void add(User user) {
+        }
+
+        @Override
+        public User get(String id) {
+            return null;
+        }
+
+        @Override
+        public List<User> getAll() {
+            return null;
+        }
+
+        @Override
+        public void deleteAll() {
+
+        }
+
+        @Override
+        public int getCount() {
+            return 0;
+        }
+
+        @Override
+        public void update(User user1) {
+
+        }
+    }
 
 
     @BeforeEach
