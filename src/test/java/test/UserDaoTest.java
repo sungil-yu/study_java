@@ -27,14 +27,14 @@ public class UserDaoTest {
     private User user1;
     private User user2;
     private User user3;
-
+/*
     @BeforeEach
     void setUp(){
         this.user1 = new User("gyumee", " 방설철", "springno1", Level.BASIC, 1, 0);
         this.user2 = new User("leegw700", " 이길원", "123", Level.SILVER, 55, 10);
         this.user3 = new User("bumjin", " 박범진", "4123", Level.GOLD, 100, 40);
 
-    }
+    }*/
 
     @Test
     void update(){

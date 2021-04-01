@@ -6,6 +6,13 @@ import com.test.test.domain.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.aop.framework.ProxyFactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -21,7 +28,20 @@ public class TestUserServiceImpl extends UserServiceImpl {
     static private class TestUserServiceException extends RuntimeException {
     }
     private String id;
+    @Autowired
+    ApplicationContext context;
 
+    MailSender mailSender = new MailSender() {
+        @Override
+        public void send(SimpleMailMessage simpleMailMessage) throws MailException {
+
+        }
+
+        @Override
+        public void send(SimpleMailMessage[] simpleMailMessages) throws MailException {
+
+        }
+    };
     List<User> users;
 
     @BeforeEach
@@ -48,17 +68,23 @@ public class TestUserServiceImpl extends UserServiceImpl {
     }
 
     @Test
+    @DirtiesContext
     void upgradeAllOrNothing(){
-        UserServiceImpl testUserServiceImpl = new TestUserServiceImpl(users.get(3).getId());
-
+        TestUserServiceImpl testUserServiceImpl = new TestUserServiceImpl(users.get(3).getId());
+        testUserServiceImpl.setMailSender(mailSender);
         testUserServiceImpl.setUserDao(this.userDao);
 
+        ProxyFactoryBean txProxyFactoryBean
+                = context.getBean("&userService", ProxyFactoryBean.class);
+        txProxyFactoryBean.setTarget(testUserServiceImpl);
+
+        UserService txUserService = (UserService) txProxyFactoryBean.getObject();
         userDao.deleteAll();
 
         for(User user: users) userDao.add(user);
 
         try{
-            testUserServiceImpl.upgradeLevels();
+            txUserService.upgradeLevels();
             fail("TestUserServiceExpcetion expected");
         }catch (TestUserServiceException e){
         }
